@@ -35,22 +35,8 @@ Evaluating e-commerce performance is crucial to understand both market concentra
 This project aims to derive actionable insights through SQL analysis with a focus on three main dimensions:
 
 1. **Customer Distribution & Retention**
-
-   * Analyze customer concentration across states.
-   * Compare one-time vs repeat buyers and spending concentration (top spenders).
-   * Identify retention challenges and highlight loyalty opportunities.
-
 2. **Seller Performance**
-
-   * Evaluate revenue distribution among sellers.
-   * Assess performance based on review scores and order volume.
-   * Uncover seller concentration in specific regions, especially São Paulo.
-
 3. **Product Category Insights**
-
-   * Identify top-selling product categories.
-   * Detect problematic categories with high demand but poor ratings.
-   * Provide insights on category trends and product quality implications.
 
 ---
 
@@ -455,7 +441,7 @@ This calls for:
 3. Run the provided `CREATE TABLE` scripts in `/schema`.
 4. Import each dataset into the corresponding table.
 5. Execute SQL queries from `/queries`.
-6. Export results and visualize them using Excel or BI tools.
+6. Export results and visualize them using Excel.
 
 ---
 
