@@ -194,7 +194,12 @@ FOREIGN KEY (customer_zip_code_prefix) REFERENCES geolocation_dataset (geolocati
   <summary>Click to view SQL Queries</summary>
 
 ```sql
-
+SELECT 
+    customer_state,
+    COUNT(DISTINCT customer_id) AS total_customers
+FROM customer_dataset
+GROUP BY customer_state
+ORDER BY total_customers DESC;
 ```
 
 </details>
@@ -205,11 +210,54 @@ FOREIGN KEY (customer_zip_code_prefix) REFERENCES geolocation_dataset (geolocati
 * The pattern reflects regional concentration of demand and uneven penetration across states.
 ![Distribution of Unique Customers by State](assets/Output%201.png)
 
+<details>
+  <summary>Click to view SQL Queries</summary>
+
+```sql
+SELECT
+  CASE WHEN order_count = 1 THEN 'One-time Customer'
+       ELSE 'Repeat Customer'
+  END AS customer_type,
+  COUNT(*) AS total_customers
+FROM (
+  SELECT c.customer_unique_id,
+         COUNT(DISTINCT o.order_id) AS order_count
+  FROM customer_dataset c
+  JOIN orders_dataset o
+    ON o.customer_id = c.customer_id
+  -- opsional: hanya order sukses
+  -- WHERE o.order_status = 'delivered'
+  GROUP BY c.customer_unique_id
+) t
+GROUP BY customer_type;
+```
+
+</details>
+
 **Key findings:** 
 * Customer mix is skewed toward first-time buyers; repeat purchasing is limited.
 * Retention underperforms, suggesting growth relies more on acquisition than loyalty.
 * Priority: drive second purchases and loyalty initiatives to raise lifetime value and improve acquisition payback.
 ![Output 2](assets/Output%202.png)
+
+<details>
+  <summary>Click to view SQL Queries</summary>
+
+```sql
+SELECT 
+    c.customer_id,
+    c.customer_state,
+    SUM(p.payment_value) AS total_spent,
+    COUNT(DISTINCT o.order_id) AS total_orders
+FROM customer_dataset c
+JOIN orders_dataset o ON c.customer_id = o.customer_id
+JOIN order_payments_dataset p ON o.order_id = p.order_id
+GROUP BY c.customer_id, c.customer_state
+ORDER BY total_spent DESC
+LIMIT 10;
+```
+
+</details>
 
 **Key Findings:**
 * Highly concentrated spending: The top customer spends significantly more than others, with the highest spender contributing the majority of the total spend.
@@ -219,17 +267,70 @@ FOREIGN KEY (customer_zip_code_prefix) REFERENCES geolocation_dataset (geolocati
 
 ### Seller Performance
 
+<details>
+  <summary>Click to view SQL Queries</summary>
+
+```sql
+SELECT 
+    s.seller_id,
+    s.seller_state,
+    SUM(oi.price + oi.freight_value) AS total_revenue,
+    COUNT(DISTINCT oi.order_id) AS total_orders
+FROM sellers_dataset s
+JOIN order_items_dataset oi ON s.seller_id = oi.seller_id
+GROUP BY s.seller_id, s.seller_state
+ORDER BY total_revenue DESC
+LIMIT 10;
+```
+
+</details>
+
 **Key findings:**
 * Top 2 sellers dominate: The top 2 sellers contribute the majority of the total revenue, with the highest seller generating over $249,640.
 * Skewed revenue distribution: A few sellers generate significantly more revenue compared to others, indicating that revenue is not evenly distributed.
 * Seller performance variability: Despite the top sellers driving revenue, there is significant variation in revenue between the remaining sellers, with the bottom sellers contributing much less.
 ![Output 4](assets/Output%204.png)
 
+<details>
+  <summary>Click to view SQL Queries</summary>
+
+```sql
+SELECT 
+    seller_state,
+    COUNT(DISTINCT seller_id) AS total_sellers
+FROM sellers_dataset
+GROUP BY seller_state
+ORDER BY total_sellers DESC;
+```
+
+</details>
+
 **Key findings:**
 * São Paulo dominates with a seller count far above all other provinces, highlighting a strong concentration of sellers in one region.
 * Sharp drop-off after São Paulo, with the next provinces (Paraná, Minas Gerais, Santa Catarina, Rio de Janeiro, Rio Grande do Sul) contributing significantly fewer sellers but still forming the second tier of activity.
 * Long tail distribution: Most other provinces host very few sellers (many with fewer than 10), showing a highly uneven geographic distribution of seller presence.
 ![Output 5](assets/Output%205.png)
+
+<details>
+  <summary>Click to view SQL Queries</summary>
+
+```sql
+SELECT 
+    s.seller_id,
+    AVG(r.review_score) AS avg_review_score,
+    COUNT(DISTINCT oi.order_id) AS total_orders
+FROM sellers_dataset s
+JOIN order_items_dataset oi 
+  ON s.seller_id = oi.seller_id
+JOIN order_reviews_dataset r 
+  ON oi.order_id = r.order_id
+GROUP BY s.seller_id
+HAVING COUNT(DISTINCT oi.order_id) >= 10 -- hanya seller dengan >= 10 order
+ORDER BY avg_review_score DESC
+LIMIT 10;
+```
+
+</details>
 
 **Key findings:**
 * Several sellers achieved perfect or near-perfect review scores (≈5.0), even with a substantial number of completed orders.
@@ -239,11 +340,50 @@ FOREIGN KEY (customer_zip_code_prefix) REFERENCES geolocation_dataset (geolocati
 
 ### Product Category Insights
 
+<details>
+  <summary>Click to view SQL Queries</summary>
+
+```sql
+SELECT 
+    product_category_name,
+    SUM(oi.price * oi.freight_value) AS total_sales
+FROM order_items_dataset oi
+JOIN products_dataset p 
+  ON oi.product_id = p.product_id
+GROUP BY product_category_name
+ORDER BY total_sales DESC
+LIMIT 10;
+```
+
+</details>
+
 **Key findings:**
 * Beleza_saude leads as the top-selling category with over 36.6M in total sales, well ahead of other categories.
 * Esporte_lazer and relogios_presentes follow, contributing more than 30M and 24.6M respectively, showing strong consumer demand.
 * The distribution highlights a clear dominance of lifestyle and household-related categories (beauty, sports, home, and electronics accessories) in driving overall sales.
 ![Output 7](assets/Output%207.png)
+
+<details>
+  <summary>Click to view SQL Queries</summary>
+
+```sql
+SELECT 
+    p.product_id,
+	r.order_id,
+    p.product_category_name,
+    AVG(r.review_score) AS avg_review_score,
+    COUNT(oi.order_id) AS total_orders
+FROM order_items_dataset oi
+JOIN products_dataset p 
+  ON oi.product_id = p.product_id
+JOIN order_reviews_dataset r 
+  ON oi.order_id = r.order_id
+GROUP BY p.product_id, r.order_id, p.product_category_name
+HAVING AVG(r.review_score) <= 2 AND COUNT(oi.order_id) > 5  -- Review score rendah dan banyak order
+ORDER BY avg_review_score ASC;
+```
+
+</details>
 
 **Key findings:**
 * Several product categories (e.g., beleza_saude, utilidades_domesticas) received very low ratings (≈1.0–2.0) yet still had relatively high order volumes.
