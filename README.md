@@ -65,7 +65,7 @@ Steps performed:
 3. Added primary and foreign key constraints to establish table relationships.
 4. Generated the Entity Relationship Diagram (ERD) for visualization.
 
-![ERD](asset/erd.png) <!-- Replace with your ERD if available -->
+![ERD](https://i.imgur.com/HRhd2Y0.png) 
 
 ---
 
@@ -83,11 +83,13 @@ Steps performed:
 * Customer mix is skewed toward first-time buyers; repeat purchasing is limited.
 * Retention underperforms, suggesting growth relies more on acquisition than loyalty.
 * Priority: drive second purchases and loyalty initiatives to raise lifetime value and improve acquisition payback.
+![Output 2](assets/Output%202.png)
 
 **Key Findings:**
 * Highly concentrated spending: The top customer spends significantly more than others, with the highest spender contributing the majority of the total spend.
 * Top 10 customers dominate: The top 10 customers account for a substantial portion of the overall spending, indicating a small number of customers are driving revenue.
 * Significant spending disparity: There is a sharp drop-off in total spending after the top spender, highlighting the unequal distribution of spending among customers.
+![Output 3](assets/Output%203.png)
 
 ### Seller Performance
 
@@ -95,17 +97,19 @@ Steps performed:
 * Top 2 sellers dominate: The top 2 sellers contribute the majority of the total revenue, with the highest seller generating over $249,640.
 * Skewed revenue distribution: A few sellers generate significantly more revenue compared to others, indicating that revenue is not evenly distributed.
 * Seller performance variability: Despite the top sellers driving revenue, there is significant variation in revenue between the remaining sellers, with the bottom sellers contributing much less.
+![Output 4](assets/Output%204.png)
 
 **Key findings:**
 * São Paulo dominates with a seller count far above all other provinces, highlighting a strong concentration of sellers in one region.
 * Sharp drop-off after São Paulo, with the next provinces (Paraná, Minas Gerais, Santa Catarina, Rio de Janeiro, Rio Grande do Sul) contributing significantly fewer sellers but still forming the second tier of activity.
 * Long tail distribution: Most other provinces host very few sellers (many with fewer than 10), showing a highly uneven geographic distribution of seller presence.
+![Output 5](assets/Output%205.png)
 
 **Key findings:**
 * Several sellers achieved perfect or near-perfect review scores (≈5.0), even with a substantial number of completed orders.
 * The top seller not only maintained a 5.0 rating but also had the highest order volume (33 orders), showing consistent customer satisfaction.
 * Overall, sellers with sufficient transaction volume demonstrated very high review averages, indicating strong service quality and positive customer experiences. 
-
+![Output 6](assets/Output%206.png)
 
 ### Product Category Insights
 
@@ -113,12 +117,13 @@ Steps performed:
 * Beleza_saude leads as the top-selling category with over 36.6M in total sales, well ahead of other categories.
 * Esporte_lazer and relogios_presentes follow, contributing more than 30M and 24.6M respectively, showing strong consumer demand.
 * The distribution highlights a clear dominance of lifestyle and household-related categories (beauty, sports, home, and electronics accessories) in driving overall sales.
+![Output 7](assets/Output%207.png)
 
 **Key findings:**
 * Several product categories (e.g., beleza_saude, utilidades_domesticas) received very low ratings (≈1.0–2.0) yet still had relatively high order volumes.
 * This pattern indicates potential problem products: despite high demand, customers consistently gave poor reviews.
 * Such categories may reflect quality issues, mismatch with expectations, or service-related problems, making them priority areas for investigation and improvement. 
-
+![Output 8](assets/Output%208.png)
 
 ---
 
